@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Countdown Timer</title>
+
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+    }
+
+    
+    #bg-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index:-2;
+    }
+
+    .content {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        color: #fff;
+        padding-top: 120px;
+        text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    }
+
+    
+    #countdown-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    
+    .unit-box {
+        text-align: center;
+    }
+
+    .time-box {
+        width: 110px;
+        padding: 15px 0;
+        font-size: 3.5em;
+        font-weight: bold;
+        border-radius: 10px;
+        color: white;
+        display: inline-block;
+    }
+
+    
+    .days { background: #ff8c00; }
+    .hours { background: #7ac142; }
+    .minutes { background: #d54c54; }
+    .seconds { background: #c57cd7; }
+
+    .label {
+        margin-top: 8px;
+        font-size: 1.1em;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    
+    #nano {
+        margin-top: 20px;
+        font-size: 1.8em;
+    }
+
+    .content h2 {
+        font-size: 6em;
+        font-weight: 800;
+        margin-bottom: 14px;
+        text-transform: uppercase;
+    }
+
+    #picnic-text {
+        margin-top: 30px;
+        font-size: 3em;
+        font-weight: 900;
+    }
+</style>
+</head>
+<body>
+
+<video id="bg-video" autoplay muted loop playsinline>
+    <source src="background2.mp4" type="video/mp4">
+</video>
+
+<button id="start-audio" style="position:absolute; top:20px; left:20px; z-index:20; padding:12px 20px; font-size:1.2em; border:none; border-radius:10px; cursor:pointer;">▶️ Start Music</button>
+
+<audio id="background-audio" loop>
+    <source src="sound2.m4a" type="audio/mp4">
+</audio>
+
+<div class="content">
+    <h2>TIME REMAINING</h2>
+
+   
+    <div id="countdown-wrapper">
+
+        <div class="unit-box">
+            <div id="days" class="time-box days">00</div>
+            <div class="label">DAYS</div>
+        </div>
+
+        <div class="unit-box">
+            <div id="hours" class="time-box hours">00</div>
+            <div class="label">HOURS</div>
+        </div>
+
+        <div class="unit-box">
+            <div id="minutes" class="time-box minutes">00</div>
+            <div class="label">MINUTES</div>
+        </div>
+
+        <div class="unit-box">
+            <div id="seconds" class="time-box seconds">00</div>
+            <div class="label">SECONDS</div>
+        </div>
+
+    </div>
+
+    <div id="nano">000000 ns</div>
+
+    <div id="picnic-text">Checkpoint Annual Picnic 2026</div>
+</div>
+
+<script>
+    const targetDate = new Date("2025-12-19 00:00:00").getTime();
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const left = targetDate - now;
+
+        if (left <= 0) return;
+
+        const d = Math.floor(left / (1000 * 60 * 60 * 24));
+        const h = Math.floor((left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((left % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((left % (1000 * 60)) / 1000);
+
+        document.getElementById("days").textContent = d.toString().padStart(2,"0");
+        document.getElementById("hours").textContent = h.toString().padStart(2,"0");
+        document.getElementById("minutes").textContent = m.toString().padStart(2,"0");
+        document.getElementById("seconds").textContent = s.toString().padStart(2,"0");
+
+        const nano = Math.floor((performance.now() % 1) * 1_000_000);
+        document.getElementById("nano").textContent = nano.toString().padStart(6,"0") + " ns";
+    }
+
+    setInterval(updateCountdown, 1);
+
+    const btn = document.getElementById('start-audio');
+    const audio = document.getElementById('background-audio');
+
+    btn.addEventListener('click', () => {
+        audio.play();
+        btn.style.display = 'none';
+    });
+</script>
+
+</body>
+</html>
